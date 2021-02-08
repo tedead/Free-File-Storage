@@ -1,0 +1,32 @@
+#upload_body, #index_body, #register_body, #create_body, #logout	{background: gray;}
+
+#upload_form	{background: white; margin-left:auto; margin-right:auto; width:22%; padding: 5px 0px 5px 20px; border: 5px ridge gray}
+
+#register_form	{background: white; margin-left:auto; margin-right:auto; width:25%; padding: 15px 0px 5px 20px; border: 5px ridge gray}
+
+#register_form  label	{margin-right: 50px}
+
+#reg_firstname	{position: relative; left: 20px}
+
+#reg_lastname	{position: relative; left: 20px}
+
+#reg_email		{position: relative; left: 45px}
+
+#reg_usn		{position: relative; left: 8px}
+
+#reg_pwd		{position: relative; left: 18px}
+
+#reg_pwd_confirm {position: relative; left: -35px}
+
+#create_div		{background: white; margin-left:auto; margin-right:auto; width:22%; padding: 5px 0px 5px 20px; border: 5px ridge gray}
+
+#index_form		{border: 5px ridge gray}
+
+#display_table	{background: white; margin-left:auto; margin-right:auto; width:70%; padding: 5px 0px 5px 20px; border: 5px ridge gray}
+
+#display_table	td	{text-align: center}
+
+#logout_div		{background: white; margin-left:auto; margin-right:auto; width:22%; padding: 5px 0px 5px 20px; border: 5px ridge gray}
+
+#logout_div	p	{text-align: center}
+
