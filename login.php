@@ -1,5 +1,4 @@
 <?php
-
 	require ('auth.php');
 	
 	require ('increment_user.php');
@@ -33,6 +32,4 @@
 		header('Location: index.php?fail=nouser');
 	
 	}
-
-
 ?>

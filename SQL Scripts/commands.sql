@@ -1,4 +1,4 @@
-SHOW CREATE TABLE login
+SHOW CREATE TABLE users
 
 --Command logging
 SET global log_output = 'FILE';

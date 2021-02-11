@@ -1,15 +1,15 @@
 <?php
-	mysql_connect("localhost", "user_select", "userPass") or die(mysql_error());
+	$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
 	
-	mysql_select_db("file_storage") or die(mysql_error());
+	mysqli_select_db($con, "file_storage") or die(mysqli_error($con));
 	
-	$result = mysql_query("SELECT * FROM 'uploads' WHERE 1 LIMIT 0, 30 ") or die(mysql_error());  
+	$result = mysqli_query($con, "SELECT * FROM 'uploads' WHERE 1 LIMIT 0, 30 ") or die(mysqli_error($con));  
 
 	echo "<table border='1'>";
 	
 	echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date</th> </tr>";
 	
-	while($row = mysql_fetch_array( $result )) {
+	while($row = mysqli_fetch_array( $result )) {
 		
 		echo "<tr><td>"; 
 		

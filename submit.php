@@ -18,7 +18,7 @@
 		  
 		} else {
 		
-			@ $db = new mysqli('localhost','user_insert','userPass','file_storage');
+			$db = new mysqli('localhost','user_insert','userPass','file_storage');
 		  
 			if (mysqli_connect_errno()) {
 		  
@@ -28,49 +28,51 @@
 		  
 			}
 		
-		  move_uploaded_file($_FILES["file"]["tmp_name"], "./User Directories/$user/$category/". $_FILES["file"]["name"]);
+			move_uploaded_file($_FILES["file"]["tmp_name"], "./User Directories/$user/$category/". $_FILES["file"]["name"]);
 		  
-		$guid = com_create_guid();
-	
-		$fileName = addslashes($_FILES["file"]["name"]);
+			$guid = com_create_guid();
+		
+			$fileName = addslashes($_FILES["file"]["name"]);
 
-		$fileSize = addslashes($_FILES["file"]["size"]);
-		
-		$fileType = addslashes($_FILES["file"]["type"]);
-		
-		$location = addslashes("./User Directories/$user/$category/". $_FILES["file"]["name"]);
-		
-		$today = date("F j, Y, g:i a");
+			$fileSize = addslashes($_FILES["file"]["size"]);
+			
+			$fileType = addslashes($_FILES["file"]["type"]);
+			
+			$location = addslashes("./User Directories/$user/$category/". $_FILES["file"]["name"]);
+			
+			$today = date("F j, Y, g:i a");
 
-		$sql = "INSERT INTO uploads (ID, Name, Size, Type, Location, Date) VALUES('$guid','$fileName','$fileSize','$fileType', '$location', '$today')";
-		  
-		$result = $db->query($sql);
-		
-		$db->close();
-		
-		//Get userid from login
-		
-		mysql_connect("localhost", "user_select", "userPass") or die(mysql_error());
-		
-		mysql_select_db("file_storage") or die(mysql_error()); 
-		
-		$data = mysql_query("SELECT ID FROM login WHERE user = '$user'") or die(mysql_error()); 
+			$sql = "INSERT INTO uploads (ID, Name, Size, Type, Location, Date) VALUES('$guid','$fileName','$fileSize','$fileType', '$location', NOW())";
+			  
+			$result = $db->query($sql);
+			
+			$db->close();
+			
+			//Get userid from login
+			
+			$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
+			
+			mysqli_select_db($con, "file_storage") or die(mysql_error($con)); 
+			
+			$data = mysqli_query($con, "SELECT ID FROM users WHERE UserName = '$user'") or die(mysqli_error($con)); 
 
-		$row = mysql_fetch_row($data);
+			$row = mysqli_fetch_row($data);
 
-		$userID = $row[0];
+			$userID = $row[0];
 
-		@ $db = new mysqli('localhost','user_insert','userPass','file_storage');
+			$db = new mysqli('localhost','user_insert','userPass','file_storage');
+			
+			$sql = "INSERT INTO user_files (FileID, UserID) VALUES('$guid','$userID')";
+			  
+			$results = $db->query($sql);
+			
+			$db->close();
 		
-		$sql = "INSERT INTO user_files (userID, fileID) VALUES('$userID','$guid')";
-		  
-		$results = $db->query($sql);
-		
-		$db->close();
-		
-			if($result) {
-				header('Location: upload.php?succeed=1');			
-			} else {			
+			if($results) {			
+				header('Location: upload.php?succeed=1');				
+			} 
+			else 
+			{		
 				header('Location: upload.php?succeed=0&reason=ni');			
 			}		  
 		}	  

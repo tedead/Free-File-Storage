@@ -1,6 +1,6 @@
 CREATE TABLE `file_storage`.`users` 
 ( 
-`ID` VARCHAR(38) NOT NULL , 
+`ID` VARCHAR(36) NOT NULL , 
 `FirstName` VARCHAR(100) NOT NULL , 
 `LastName` VARCHAR(100) NOT NULL , 
 `Email` VARCHAR(100) NOT NULL , 

@@ -6,7 +6,7 @@
 
 		$db->select_db('file_storage');
 
-		$query = "SELECT 1 FROM login WHERE UserName = '$username'";
+		$query = "SELECT 1 FROM users WHERE UserName = '$username'";
 
 		$result = $db->query($query);
 

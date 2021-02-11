@@ -13,7 +13,7 @@
 		}
 		
 		// Perform query
-		if ($result = $mysqli -> query("SELECT 1 FROM login WHERE UserName = '$username' AND Password = '$password'")) 
+		if ($result = $mysqli -> query("SELECT * FROM users WHERE UserName = '$username' AND Password = '$password'")) 
 		{
 		  $results = $result -> num_rows;
 		  // Free result set
@@ -23,7 +23,7 @@
 		$mysqli -> close();
 		//$db->select_db('file_storage');
 
-		//$query = "SELECT * FROM login WHERE user = '$username' AND password = '$password'";
+		//$query = "SELECT * FROM users WHERE user = '$username' AND password = '$password'";
 
 		//$result = $db->query($query);
 
@@ -32,9 +32,8 @@
 		//$result->free();
 		
 		//$db->close();
-		
-		return $results;
 
+		return $results;
 	}
 
 ?>

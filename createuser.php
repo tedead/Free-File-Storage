@@ -4,7 +4,9 @@
 
 		$db->select_db('file_storage');
 		
-		$query = "INSERT INTO login(FirstName, LastName, Email, DisplayName, UserName, Password, Created) VALUES ('$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
+		$guid = com_create_guid();
+		
+		$query = "INSERT INTO users(ID, FirstName, LastName, Email, DisplayName, UserName, Password, Created) VALUES ('$guid', '$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
 
 		$result = $db->query($query);
 		

@@ -4,9 +4,9 @@
 	
 	$notlogged_location = "index.php";
 
-	if(!isset($_SESSION['login'])){
+	if(!isset($_SESSION['user'])){
 
-		header("Location: index.php?fail=nologin");
+		header("Location: index.php?fail=nousers");
 
 	}
 	
@@ -33,13 +33,11 @@
 			echo "<h4><center>An unknown error occurred.</center></h4>";
 		
 		} else if ($reason == "ni") {
-		
-			echo "<h4><center>File record not inserted into the database. Upload rejected.</center></h4>";
-		
-		}
-	
+			
+			echo "<h4><center>File record not inserted into the database. Upload rejected.</center></h4>";	
+			
+		}	
 	}
-
 ?>
 
 <html>
@@ -84,17 +82,17 @@
 		
 			<?php
 
-				mysql_connect("localhost", "system", "system") or die(mysql_error());
+				$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
 				
-				mysql_select_db("file_storage") or die(mysql_error());
+				mysqli_select_db($con, "file_storage") or die(mysqli_error());
 				
-				$result = mysql_query("SELECT uploads.Name, uploads.Size, uploads.Type, uploads.Location, uploads.Date FROM login, uploads, user_files WHERE login.ID = user_files.userID AND user_files.fileID = uploads.ID AND login.user = '$user'") or die(mysql_error());  
+				$result = mysqli_query($con, "SELECT uploads.Name, uploads.Size, uploads.Type, uploads.Location, uploads.Date FROM users, uploads, user_files WHERE users.ID = user_files.userID AND user_files.fileID = uploads.ID AND users.UserName = '$user'") or die(mysqli_error($con));  
 
 				echo "<table id='display_table' border='1'>";
 				
 				echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date Uploaded</th> <th>Download</th> </tr>";
 				
-				while($row = mysql_fetch_array( $result )) {
+				while($row = mysqli_fetch_array( $result )) {
 				
 					echo "<tr><td>"; 
 					
@@ -120,7 +118,7 @@
 					
 					echo "</td><td>";
 					
-					$download_link = "http://localhost/Free%20File%20Storage/User%20Directories/joe123/Application/.classpath";
+					$download_link = "http://localhost/Free%20File%20Storage/User%20Directories/".$user."/Application/.classpath";
 					
 					echo "<button type='button' onclick='$download_link'>Download</button>";
 
