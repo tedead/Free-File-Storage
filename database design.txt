@@ -1,0 +1,11 @@
+database:
+
+file_storage 
+
+table login 
+
+columns ID, firstName, lastName, email, displayName, userName, password, created
+
+table uploads
+
+columns ID, Name, Size, Type, Location, Date

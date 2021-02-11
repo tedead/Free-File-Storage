@@ -1,19 +1,15 @@
 <?php
+	function create_user($firstname, $lastname, $email, $displayname, $username, $password) {	
+		$db = mysqli_connect("localhost", "user_insert", "userPass");
 
-	function create_user($firstname, $lastname, $email, $displayName, $userName, $password) {
-	
-		$db = mysqli_connect("localhost", "create", "create");
-
-		$db->select_db('blog');
+		$db->select_db('file_storage');
 		
-		$query = "INSERT INTO login(firstName, lastName, email, displayName, userName, password, created) VALUES ('$firstname','$lastname','$email', '$displayName','$username','$password', getdate())";
+		$query = "INSERT INTO login(FirstName, LastName, Email, DisplayName, UserName, Password, Created) VALUES ('$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
 
 		$result = $db->query($query);
 		
 		$db->close();
 		
 		return $result;
-
 	}
-
 ?>

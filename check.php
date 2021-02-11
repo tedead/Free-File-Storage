@@ -68,7 +68,7 @@
 	
 	}
 	
-	$success = create_user($username, $password, $firstname, $lastname, $email);
+	$success = create_user($firstname, $lastname, $email, $username, $username, $password);
 	
 	if ($success) {
 	

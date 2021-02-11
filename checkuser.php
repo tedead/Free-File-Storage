@@ -2,11 +2,11 @@
 
 	function check_user($username) {
 	
-		$db = mysqli_connect("localhost", "check", "check");
+		$db = mysqli_connect("localhost", "user_check", "userPass");
 
-		$db->select_db('blog');
+		$db->select_db('file_storage');
 
-		$query = "SELECT * FROM login WHERE user = '$username'";
+		$query = "SELECT 1 FROM login WHERE UserName = '$username'";
 
 		$result = $db->query($query);
 

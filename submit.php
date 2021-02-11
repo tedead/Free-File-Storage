@@ -18,7 +18,7 @@
 		  
 		} else {
 		
-			@ $db = new mysqli('localhost','system','system','file_storage');
+			@ $db = new mysqli('localhost','user_insert','userPass','file_storage');
 		  
 			if (mysqli_connect_errno()) {
 		  
@@ -50,7 +50,7 @@
 		
 		//Get userid from login
 		
-		mysql_connect("localhost", "system", "system") or die(mysql_error());
+		mysql_connect("localhost", "user_select", "userPass") or die(mysql_error());
 		
 		mysql_select_db("file_storage") or die(mysql_error()); 
 		
@@ -60,7 +60,7 @@
 
 		$userID = $row[0];
 
-		@ $db = new mysqli('localhost','system','system','file_storage');
+		@ $db = new mysqli('localhost','user_insert','userPass','file_storage');
 		
 		$sql = "INSERT INTO user_files (userID, fileID) VALUES('$userID','$guid')";
 		  
@@ -68,18 +68,11 @@
 		
 		$db->close();
 		
-			if ($result) {
-		
-				header('Location: upload.php?succeed=1');
-			
-			} else {
-			
-				header('Location: upload.php?succeed=0&reason=ni');
-			
-			}
-		  
-		}
-	  
+			if($result) {
+				header('Location: upload.php?succeed=1');			
+			} else {			
+				header('Location: upload.php?succeed=0&reason=ni');			
+			}		  
+		}	  
 	}
-
 ?> 

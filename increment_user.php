@@ -1,8 +1,7 @@
 <?php 
-
 	function increment_user($username) {
 	
-		$db = mysqli_connect("localhost", "system", "system");
+		$db = mysqli_connect("localhost", "user_select", "userPass");
 
 		$db->select_db('file_storage');
 
@@ -16,14 +15,10 @@
 		
 		$userID = $row['ID'];
 		
-		
-		
 		$result->free();
 		
 		$db->close();
 		
 		return $results;
-
-	}
-	
+	}	
 ?>
