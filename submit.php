@@ -6,12 +6,12 @@
 	
 	$category = $_POST['category'];
 	
-	if ($_FILES["file"]["error"] > 0) {
-	
-	  header('Location: upload.php?succeed=0&reason=er');
-	  
-	} else {
-	  
+	if ($_FILES["file"]["error"] > 0)
+	{
+	  header('Location: upload.php?succeed=0&reason=er');  
+	} 
+	else
+	{
 		if (file_exists("./User Directories/$user/$category/". $_FILES["file"]["name"])) {
 		
 		  header('Location: upload.php?succeed=0&reason=ex');
@@ -37,6 +37,11 @@
 			$fileSize = addslashes($_FILES["file"]["size"]);
 			
 			$fileType = addslashes($_FILES["file"]["type"]);
+			
+			if (!file_exists("./User Directories/$username/$category")) 
+			{
+				mkdir("./User Directories/$username/$category");
+			}
 			
 			$location = addslashes("./User Directories/$user/$category/". $_FILES["file"]["name"]);
 			

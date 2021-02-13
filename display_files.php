@@ -9,7 +9,7 @@
 	
 	echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date</th> </tr>";
 	
-	while($row = mysqli_fetch_array( $result )) {
+	while($row = mysqli_fetch_array($result)) {
 		
 		echo "<tr><td>"; 
 		

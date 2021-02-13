@@ -1,5 +1,7 @@
 <?php
 
+	include "./functions/globals.php";
+	
 	@ $failure = $_GET['fail'];
 	
 	if ($failure == "nouser") {

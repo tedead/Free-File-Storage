@@ -16,25 +16,40 @@
 	
 	@ $reason = $_GET['reason'];
 	
-	if ($upload_status == "1") {
+	$downloadReady = isset($_GET['download']) ? $_GET['download'] : "0";
 	
+	$wasSentFromFetch = isset($_SESSION['sentFromFetch']) ? $_SESSION['sentFromFetch'] : "false";
+	
+	$downloadLink = isset($_SESSION['downloadLink']) ? $_SESSION['downloadLink'] : "";
+	
+	if($wasSentFromFetch == "true" && $downloadReady = "1")
+	{
+		echo "<h3><center><a style='text-decoration: none; font-size: 1.5em;' href='$downloadLink'>Download</a></center></h3>";
+	}
+	else if($wasSentFromFetch && $downloadReady = "0")
+	{
+		echo "<h3><center>Download could not be fetched from server. Try again.</center></h3>";
+	}
+
+	if ($upload_status == "1")
+	{
 		echo "<h3><center>File was successfully uploaded.</center></h3>";
-	
-	} else if ($upload_status == "0") {
-	
+	}
+	else if ($upload_status == "0")
+	{
 		echo "<h3><center>Upload could not be completed.</center></h3>";
 		
 		if ($reason == "ex") {
 		
-			echo "<h4><center>The file already exists.</center></h4>";
+			echo "<h3><center>The file already exists.</center></h3>";
 		
 		} else if ($reason == "er") {
 		
-			echo "<h4><center>An unknown error occurred.</center></h4>";
+			echo "<h3><center>An unknown error occurred.</center></h3>";
 		
 		} else if ($reason == "ni") {
 			
-			echo "<h4><center>File record not inserted into the database. Upload rejected.</center></h4>";	
+			echo "<h3><center>File record not inserted into the database. Upload rejected.</center></h3>";	
 			
 		}	
 	}
@@ -50,7 +65,9 @@
 		
 		<label for="file">Filename:</label>
 		
-		<input type="file" size="40" name="file" id="file" />
+		<input type="hidden" name="MAX_FILE_SIZE" value="90000000000" />
+		
+		<input type="file" size="40000000000" name="file" id="file" />
 		
 		<br />
 		
@@ -86,13 +103,13 @@
 				
 				mysqli_select_db($con, "file_storage") or die(mysqli_error());
 				
-				$result = mysqli_query($con, "SELECT uploads.Name, uploads.Size, uploads.Type, uploads.Location, uploads.Date FROM users, uploads, user_files WHERE users.ID = user_files.userID AND user_files.fileID = uploads.ID AND users.UserName = '$user'") or die(mysqli_error($con));  
+				$result = mysqli_query($con, "SELECT CONCAT(user_files.UserID, user_files.FileID) AS Identifier, uploads.Name, uploads.Size, uploads.Type, uploads.Location, uploads.Date FROM users, uploads, user_files WHERE users.ID = user_files.userID AND user_files.fileID = uploads.ID AND users.UserName = '$user'") or die(mysqli_error($con));  
 
 				echo "<table id='display_table' border='1'>";
-				
+				echo "<form name='fetchForm' method='post' action='fetch.php'>";
 				echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date Uploaded</th> <th>Download</th> </tr>";
 				
-				while($row = mysqli_fetch_array( $result )) {
+				while($row = mysqli_fetch_array($result)) {
 				
 					echo "<tr><td>"; 
 					
@@ -118,15 +135,15 @@
 					
 					echo "</td><td>";
 					
-					$download_link = "http://localhost/Free%20File%20Storage/User%20Directories/".$user."/Application/.classpath";
+					$ident = $row['Identifier'];
 					
-					echo "<button type='button' onclick='$download_link'>Download</button>";
+					echo "<button type='submit' name='identity' value='$ident'>Fetch</button>";
 
 					echo "</td></tr>";
 					
 				} 
 
-				echo "</table>";
+				echo "</form></table>";
 				
 			?>
 		
