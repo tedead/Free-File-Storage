@@ -38,16 +38,16 @@
 			
 			$fileType = addslashes($_FILES["file"]["type"]);
 			
-			if (!file_exists("./User Directories/$username/$category")) 
+			if (!file_exists("./User Directories/$user/$category")) 
 			{
-				mkdir("./User Directories/$username/$category");
+				mkdir("./User Directories/$user/$category");
 			}
 			
 			$location = addslashes("./User Directories/$user/$category/". $_FILES["file"]["name"]);
 			
 			$today = date("F j, Y, g:i a");
 
-			$sql = "INSERT INTO uploads (ID, Name, Size, Type, Location, Date) VALUES('$guid','$fileName','$fileSize','$fileType', '$location', NOW())";
+			$sql = "INSERT INTO files(FileID, Name, Size, Type, Location, DateCreated) VALUES('$guid','$fileName','$fileSize','$fileType', '$location', CURDATE())";
 			  
 			$result = $db->query($sql);
 			
@@ -59,7 +59,7 @@
 			
 			mysqli_select_db($con, "file_storage") or die(mysql_error($con)); 
 			
-			$data = mysqli_query($con, "SELECT ID FROM users WHERE UserName = '$user'") or die(mysqli_error($con)); 
+			$data = mysqli_query($con, "SELECT UserID FROM users WHERE UserName = '$user'") or die(mysqli_error($con)); 
 
 			$row = mysqli_fetch_row($data);
 
@@ -67,13 +67,14 @@
 
 			$db = new mysqli('localhost','user_insert','userPass','file_storage');
 			
-			$sql = "INSERT INTO user_files (FileID, UserID) VALUES('$guid','$userID')";
+			$sql = "INSERT INTO user_files (FileID, UserID, DateCreated) VALUES('$guid','$userID', CURDATE())";
 			  
 			$results = $db->query($sql);
 			
 			$db->close();
 		
-			if($results) {			
+			if($results)
+			{			
 				header('Location: upload.php?succeed=1');				
 			} 
 			else 

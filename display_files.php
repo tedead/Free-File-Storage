@@ -3,7 +3,7 @@
 	
 	mysqli_select_db($con, "file_storage") or die(mysqli_error($con));
 	
-	$result = mysqli_query($con, "SELECT * FROM 'uploads' WHERE 1 LIMIT 0, 30 ") or die(mysqli_error($con));  
+	$result = mysqli_query($con, "SELECT * FROM files WHERE 1 LIMIT 0, 30 ") or die(mysqli_error($con));  
 
 	echo "<table border='1'>";
 	

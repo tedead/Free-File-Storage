@@ -6,7 +6,7 @@
 		
 		$guid = com_create_guid();
 		
-		$query = "INSERT INTO users(ID, FirstName, LastName, Email, DisplayName, UserName, Password, Created) VALUES ('$guid', '$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
+		$query = "INSERT INTO users(UserID, FirstName, LastName, Email, DisplayName, UserName, Password, DateCreated) VALUES ('$guid', '$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
 
 		$result = $db->query($query);
 		

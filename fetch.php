@@ -11,7 +11,7 @@
 				
 	mysqli_select_db($con, "file_storage") or die(mysqli_error());
 				
-	$sql = mysqli_query($con, "SELECT SUBSTR(up.Location, 2) AS File FROM users u INNER JOIN user_files uf ON u.ID = uf.UserID INNER JOIN uploads up ON uf.FileID = up.ID WHERE u.ID = '$userID' AND uf.FileID = '$fileID'") or die(mysqli_error($con));  
+	$sql = mysqli_query($con, "SELECT SUBSTR(up.Location, 2) AS File FROM users u INNER JOIN user_files uf ON u.UserID = uf.UserID INNER JOIN files up ON uf.FileID = up.FileID WHERE u.UserID = '$userID' AND uf.FileID = '$fileID'") or die(mysqli_error($con));  
 
 	$row = mysqli_fetch_array($sql);
 	

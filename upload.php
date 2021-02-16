@@ -65,9 +65,7 @@
 		
 		<label for="file">Filename:</label>
 		
-		<input type="hidden" name="MAX_FILE_SIZE" value="90000000000" />
-		
-		<input type="file" size="40000000000" name="file" id="file" />
+		<input type="file" size="40" name="file" id="file" />
 		
 		<br />
 		
@@ -103,11 +101,11 @@
 				
 				mysqli_select_db($con, "file_storage") or die(mysqli_error());
 				
-				$result = mysqli_query($con, "SELECT CONCAT(user_files.UserID, user_files.FileID) AS Identifier, uploads.Name, uploads.Size, uploads.Type, uploads.Location, uploads.Date FROM users, uploads, user_files WHERE users.ID = user_files.userID AND user_files.fileID = uploads.ID AND users.UserName = '$user'") or die(mysqli_error($con));  
+				$result = mysqli_query($con, "SELECT CONCAT(uf.UserID, uf.FileID) AS Identifier, f.Name, f.Size, f.Type, f.Location, f.DateCreated FROM user_files uf JOIN files f ON uf.FileID = f.FileID JOIN users u ON uf.UserID = u.UserID WHERE u.UserID = uf.UserID AND uf.FileID = f.FileID AND u.UserName = '$user'") or die(mysqli_error($con));  
 
 				echo "<table id='display_table' border='1'>";
-				echo "<form name='fetchForm' method='post' action='fetch.php'>";
-				echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date Uploaded</th> <th>Download</th> </tr>";
+
+				echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date Uploaded</th> <th>Download</th> <th>Delete</th></tr>";
 				
 				while($row = mysqli_fetch_array($result)) {
 				
@@ -131,19 +129,23 @@
 					
 					echo "</td><td>";
 					
-					echo $row['Date'];
+					echo $row['DateCreated'];
 					
 					echo "</td><td>";
 					
 					$ident = $row['Identifier'];
 					
-					echo "<button type='submit' name='identity' value='$ident'>Fetch</button>";
+					echo "<form name='fetchForm' method='post' action='fetch.php'><button type='submit' class='fetbutton' name='identity' value='$ident'>Fetch</button></form>";
+					
+					echo "</td><td>";
+					
+					echo "<form name='deleteForm' method='post' action='delete.php'><button type='submit' class='delbutton' name='identity' value='$ident'>Delete</button></form>";
 
 					echo "</td></tr>";
 					
 				} 
 
-				echo "</form></table>";
+				echo "</table>";
 				
 			?>
 		

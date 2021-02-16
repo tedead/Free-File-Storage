@@ -6,6 +6,6 @@ table login
 
 columns ID, firstName, lastName, email, displayName, userName, password, created
 
-table uploads
+table files
 
 columns ID, Name, Size, Type, Location, Date
