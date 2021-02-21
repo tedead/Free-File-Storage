@@ -21,7 +21,25 @@
 		
 		$url = getBaseURL().dirname($_SERVER['PHP_SELF']).$file;
 
-		$file_name = basename($file); 
+		$file_name = basename($file);
+		
+		/*
+		  $zip = new ZipArchive();
+		  $filename = "./$file_name.zip";
+
+		  if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+			  echo "bad";
+			exit("cannot open <$filename>\n");
+		  }
+
+		  $dir = './Temp';
+
+		  // Create zip
+		  $zip->addFile($fullPath.$file);
+		  echo var_dump($zip);
+
+		  $zip->close();
+		*/
 		
 		$_SESSION['downloadLink'] = $url;
 		
