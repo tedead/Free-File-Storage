@@ -1,23 +1,23 @@
 <?php 
+	require_once __DIR__ . "/functions/db.php";
+
 	function increment_user($username) {
 	
-		$db = mysqli_connect("localhost", "user_select", "userPass");
+		$conn = open_sqlsrv_connection("user_select", "userPass");
+		if ($conn === false) {
+			return 0;
+		}
 
-		$db->select_db('file_storage');
-
-		$query = "SELECT UserID FROM users WHERE user = '$username'";
-
-		$result = $db->query($query);
-
-		$results = $result->num_rows;
-		
-		$row = $result->fetch_assoc();
-		
-		$userID = $row['ID'];
-		
-		$result->free();
-		
-		$db->close();
+		$query = "SELECT UserID FROM users WHERE UserName = ?";
+		$stmt = sqlsrv_query($conn, $query, array($username));
+		$results = 0;
+		if ($stmt !== false) {
+			while (sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC) !== null) {
+				$results++;
+			}
+			sqlsrv_free_stmt($stmt);
+		}
+		sqlsrv_close($conn);
 		
 		return $results;
 	}	

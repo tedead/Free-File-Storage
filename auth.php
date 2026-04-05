@@ -1,37 +1,26 @@
 <?php
+	require_once __DIR__ . "/functions/db.php";
 
 	function authenticate_user($username, $password) {
 	
 		$results = "";
-		//$db = mysqli_connect("localhost", "system", "system");
-		
-		$mysqli = new mysqli("localhost", "user_check", "userPass", "file_storage");
+		$conn = open_sqlsrv_connection("user_check", "userPass");
 
-		if ($mysqli -> connect_errno)
-		{
+		if ($conn === false) {
 			exit();
 		}
-		
-		// Perform query
-		if ($result = $mysqli -> query("SELECT * FROM users WHERE UserName = '$username' AND Password = '$password'")) 
-		{
-		  $results = $result -> num_rows;
-		  // Free result set
-		  $result -> free_result();
+
+		$query = "SELECT 1 FROM users WHERE UserName = ? AND Password = ?";
+		$params = array($username, $password);
+		$stmt = sqlsrv_query($conn, $query, $params);
+		if ($stmt !== false) {
+			$results = 0;
+			while (sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC) !== null) {
+				$results++;
+			}
+			sqlsrv_free_stmt($stmt);
 		}
-
-		$mysqli -> close();
-		//$db->select_db('file_storage');
-
-		//$query = "SELECT * FROM users WHERE user = '$username' AND password = '$password'";
-
-		//$result = $db->query($query);
-
-		//$results = $result->num_rows;
-		
-		//$result->free();
-		
-		//$db->close();
+		sqlsrv_close($conn);
 
 		return $results;
 	}

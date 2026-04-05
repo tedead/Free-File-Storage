@@ -1,6 +1,7 @@
 <?php
 
 	session_start();
+	require_once __DIR__ . "/functions/db.php";
 	
 	$notlogged_location = "index.php";
 
@@ -97,17 +98,18 @@
 		
 			<?php
 
-				$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
-				
-				mysqli_select_db($con, "file_storage") or die(mysqli_error());
-				
-				$result = mysqli_query($con, "SELECT CONCAT(uf.UserID, uf.FileID) AS Identifier, f.Name, f.Size, f.Type, f.Location, f.DateCreated FROM user_files uf JOIN files f ON uf.FileID = f.FileID JOIN users u ON uf.UserID = u.UserID WHERE u.UserID = uf.UserID AND uf.FileID = f.FileID AND u.UserName = '$user'") or die(mysqli_error($con));  
+				$con = open_sqlsrv_connection("user_select", "userPass");
+				$result = sqlsrv_query(
+					$con,
+					"SELECT CONCAT(uf.UserID, uf.FileID) AS Identifier, f.Name, f.Size, f.Type, f.Location, f.DateCreated FROM user_files uf JOIN files f ON uf.FileID = f.FileID JOIN users u ON uf.UserID = u.UserID WHERE u.UserID = uf.UserID AND uf.FileID = f.FileID AND u.UserName = ?",
+					array($user)
+				);
 
 				echo "<table id='display_table' border='1'>";
 
 				echo "<tr> <th>Name</th> <th>Size</th> <th>Type</th> <th>Location</th>  <th>Date Uploaded</th> <th>Download</th> <th>Delete</th></tr>";
 				
-				while($row = mysqli_fetch_array($result)) {
+				while($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
 				
 					echo "<tr><td>"; 
 					
@@ -144,6 +146,8 @@
 					echo "</td></tr>";
 					
 				} 
+				sqlsrv_free_stmt($result);
+				sqlsrv_close($con);
 
 				echo "</table>";
 				

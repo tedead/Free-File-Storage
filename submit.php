@@ -1,4 +1,5 @@
 <?php
+	require_once __DIR__ . "/functions/db.php";
 	
 	session_start();
 	
@@ -18,14 +19,10 @@
 		  
 		} else {
 		
-			$db = new mysqli('localhost','user_insert','userPass','file_storage');
-		  
-			if (mysqli_connect_errno()) {
-		  
+			$conn = open_sqlsrv_connection("user_insert", "userPass");
+			if ($conn === false) {
 				echo 'Error: Could not connect to the database.';
-				
 				exit;
-		  
 			}
 		
 			move_uploaded_file($_FILES["file"]["tmp_name"], "./User Directories/$user/$category/". $_FILES["file"]["name"]);
@@ -47,33 +44,28 @@
 			
 			$today = date("F j, Y, g:i a");
 
-			$sql = "INSERT INTO files(FileID, Name, Size, Type, Location, DateCreated) VALUES('$guid','$fileName','$fileSize','$fileType', '$location', CURDATE())";
-			  
-			$result = $db->query($sql);
+			$sql = "INSERT INTO files(FileID, Name, Size, Type, Location, DateCreated) VALUES(?, ?, ?, ?, ?, GETDATE())";
+			$result = sqlsrv_query($conn, $sql, array($guid, $fileName, $fileSize, $fileType, $location));
 			
-			$db->close();
+			sqlsrv_close($conn);
 			
 			//Get userid from login
 			
-			$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
-			
-			mysqli_select_db($con, "file_storage") or die(mysql_error($con)); 
-			
-			$data = mysqli_query($con, "SELECT UserID FROM users WHERE UserName = '$user'") or die(mysqli_error($con)); 
-
-			$row = mysqli_fetch_row($data);
-
+			$con = open_sqlsrv_connection("user_select", "userPass");
+			$data = sqlsrv_query($con, "SELECT UserID FROM users WHERE UserName = ?", array($user));
+			$row = sqlsrv_fetch_array($data, SQLSRV_FETCH_NUMERIC);
 			$userID = $row[0];
+			sqlsrv_free_stmt($data);
+			sqlsrv_close($con);
 
-			$db = new mysqli('localhost','user_insert','userPass','file_storage');
+			$conn = open_sqlsrv_connection("user_insert", "userPass");
 			
-			$sql = "INSERT INTO user_files (FileID, UserID, DateCreated) VALUES('$guid','$userID', CURDATE())";
-			  
-			$results = $db->query($sql);
+			$sql = "INSERT INTO user_files (FileID, UserID, DateCreated) VALUES(?, ?, GETDATE())";
+			$results = sqlsrv_query($conn, $sql, array($guid, $userID));
 			
-			$db->close();
+			sqlsrv_close($conn);
 		
-			if($results)
+			if($results !== false)
 			{			
 				header('Location: upload.php?succeed=1');				
 			} 

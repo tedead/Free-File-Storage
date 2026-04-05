@@ -1,17 +1,21 @@
 <?php
-	function create_user($firstname, $lastname, $email, $displayname, $username, $password) {	
-		$db = mysqli_connect("localhost", "user_insert", "userPass");
+	require_once __DIR__ . "/functions/db.php";
 
-		$db->select_db('file_storage');
+	function create_user($firstname, $lastname, $email, $displayname, $username, $password) {	
+		$conn = open_sqlsrv_connection("user_insert", "userPass");
+		if ($conn === false) {
+			return false;
+		}
 		
 		$guid = com_create_guid();
 		
-		$query = "INSERT INTO users(UserID, FirstName, LastName, Email, DisplayName, UserName, Password, DateCreated) VALUES ('$guid', '$firstname','$lastname','$email', '$displayname','$username','$password', CURDATE())";
+		$query = "INSERT INTO users(UserID, FirstName, LastName, Email, DisplayName, UserName, Password, DateCreated) VALUES (?, ?, ?, ?, ?, ?, ?, GETDATE())";
 
-		$result = $db->query($query);
+		$params = array($guid, $firstname, $lastname, $email, $displayname, $username, $password);
+		$result = sqlsrv_query($conn, $query, $params);
 		
-		$db->close();
+		sqlsrv_close($conn);
 		
-		return $result;
+		return $result !== false;
 	}
 ?>
