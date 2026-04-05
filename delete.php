@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	include "./functions/globals.php";
+	require_once __DIR__ . "/functions/db.php";
 	require constant("BASE_PATH").dirname($_SERVER['PHP_SELF'])."/functions/getbaseurl.php";
 	//$fullPath = constant("BASE_PATH").dirname($_SERVER['PHP_SELF']);
 	$identifier = $_POST['identity'];
@@ -10,16 +11,15 @@
 	$fileCount = 0;
 	$deleted = "0";
 	
-	$con = mysqli_connect("localhost", "user_delete", "userPass") or die(mysqli_error());
-				
-	mysqli_select_db($con, "file_storage") or die(mysqli_error());
-				
-	$sql = mysqli_query($con, "CALL ffs_delFile('$userID', '$fileID', @filename, @filecount)") or die(mysqli_error($con)); 
+	$con = open_sqlsrv_connection("user_delete", "userPass");
+	$sql = sqlsrv_query($con, "EXEC ffs_delFile @UserID = ?, @FileID = ?", array($userID, $fileID));
 
-	while($row = mysqli_fetch_array($sql)) {
+	while($row = sqlsrv_fetch_array($sql, SQLSRV_FETCH_ASSOC)) {
 		$fileToRemoveFromStorage = $row['FileName'];
 		$fileCount = $row['FileCount'];
 	}
+	sqlsrv_free_stmt($sql);
+	sqlsrv_close($con);
 	
 	if($fileToRemoveFromStorage == "")
 	{	

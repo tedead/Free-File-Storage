@@ -1,21 +1,25 @@
 <?php
 	session_start();
 	include "./functions/globals.php";
+	require_once __DIR__ . "/functions/db.php";
 	require constant("BASE_PATH").dirname($_SERVER['PHP_SELF'])."/functions/getbaseurl.php";
 	//$fullPath = constant("BASE_PATH").dirname($_SERVER['PHP_SELF']);
 	$identifier = $_POST['identity'];
 	$userID = substr($identifier, 0, 38);
 	$fileID = substr($identifier, 38, 76);
 	
-	$con = mysqli_connect("localhost", "user_select", "userPass") or die(mysqli_error());
-				
-	mysqli_select_db($con, "file_storage") or die(mysqli_error());
-				
-	$sql = mysqli_query($con, "SELECT SUBSTR(up.Location, 2) AS File FROM users u INNER JOIN user_files uf ON u.UserID = uf.UserID INNER JOIN files up ON uf.FileID = up.FileID WHERE u.UserID = '$userID' AND uf.FileID = '$fileID'") or die(mysqli_error($con));  
+	$con = open_sqlsrv_connection("user_select", "userPass");
+	$sql = sqlsrv_query(
+		$con,
+		"SELECT SUBSTRING(up.Location, 2, LEN(up.Location)) AS File FROM users u INNER JOIN user_files uf ON u.UserID = uf.UserID INNER JOIN files up ON uf.FileID = up.FileID WHERE u.UserID = ? AND uf.FileID = ?",
+		array($userID, $fileID)
+	);
 
-	$row = mysqli_fetch_array($sql);
+	$row = sqlsrv_fetch_array($sql, SQLSRV_FETCH_ASSOC);
+	sqlsrv_free_stmt($sql);
+	sqlsrv_close($con);
 	
-	if(count($row) > 0)
+	if($row !== null)
 	{
 		$file = $row['File'];
 		

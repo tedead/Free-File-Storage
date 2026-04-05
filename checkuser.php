@@ -1,20 +1,23 @@
 <?php
+	require_once __DIR__ . "/functions/db.php";
 
 	function check_user($username) {
 	
-		$db = mysqli_connect("localhost", "user_check", "userPass");
+		$conn = open_sqlsrv_connection("user_check", "userPass");
+		if ($conn === false) {
+			return 0;
+		}
 
-		$db->select_db('file_storage');
-
-		$query = "SELECT 1 FROM users WHERE UserName = '$username'";
-
-		$result = $db->query($query);
-
-		$results = $result->num_rows;
-		
-		$result->free();
-		
-		$db->close();
+		$query = "SELECT 1 FROM users WHERE UserName = ?";
+		$stmt = sqlsrv_query($conn, $query, array($username));
+		$results = 0;
+		if ($stmt !== false) {
+			while (sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC) !== null) {
+				$results++;
+			}
+			sqlsrv_free_stmt($stmt);
+		}
+		sqlsrv_close($conn);
 		
 		return $results;
 
